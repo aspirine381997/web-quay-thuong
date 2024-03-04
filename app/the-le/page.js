@@ -16,10 +16,10 @@ export default function Home() {
   return (
     <Suspense fallback={<div>loading...</div>}>
       <div className="mb-8 bg-[#F9F9F9]">
-        <div className="rounded-b-[30px] bg-[url('/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-3 pt-10">
+        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-3 pt-10">
           {/* Header---- */}
           <div className="flex place-content-between items-center">
-            <img src="/images/logo.png" onClick={() => navigate("")} />
+            <img src="/minigame/images/logo.png" onClick={() => navigate("")} />
             <div className="font-sf text-sm">
               <span
                 className="mr-5 text-[#FFD600]"
@@ -48,7 +48,7 @@ export default function Home() {
 
         <div className="mt-2.5 px-5">
           <img
-            src="/images/banner.png"
+            src="/minigame/images/banner.png"
             className="w-full rounded-[17px] px-[2.5px]"
           />
           <div className="mt-[26px] text-justify font-sf text-sm leading-[22px]">
@@ -163,7 +163,7 @@ export default function Home() {
         </div>
 
         <img
-          src="/images/back-home.png"
+          src="/minigame/images/back-home.png"
           className="fixed bottom-[25px] right-[18px]"
           onClick={() => navigate("")}
         />

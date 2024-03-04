@@ -7,7 +7,7 @@ export default function RewardPopup(props) {
       <div className="w-full max-w-[340px] rounded-[20px] bg-white px-[13px] pb-8 pt-3">
         <div className="flex justify-end">
           <img
-            src="/images/close.png"
+            src="/minigame/images/close.png"
             className="cursor-pointer"
             onClick={close}
           />
@@ -50,7 +50,7 @@ export default function RewardPopup(props) {
 
         {listVoucher?.[0]?.orders == 0 && (
           <>
-            <img src="/images/miss.png" className="mx-auto mt-[30px]" />
+            <img src="/minigame/images/miss.png" className="mx-auto mt-[30px]" />
             <div className="mb-[36px] mt-[18px] text-center font-sf text-xl font-semibold text-pink">
               Chúc bạn may mắn lần sau
             </div>

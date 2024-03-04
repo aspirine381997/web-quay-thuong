@@ -1,8 +1,8 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
-import Voucher from "../../../components/voucher";
+import Voucher from "../../components/voucher";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getListAward } from "../../api/api";
+import { getListAward } from "../api/api";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -33,10 +33,10 @@ export default function Home() {
   return (
     <Suspense fallback={<div>loading...</div>}>
       <div className="mb-8 min-h-screen bg-[#F1F3F4]">
-        <div className="rounded-b-[30px] bg-[url('/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-[21px] pt-10">
+        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-[21px] pt-10">
           {/* Header---- */}
           <div className="flex place-content-between items-center">
-            <img src="/images/logo.png" onClick={() => navigate("")} />
+            <img src="/minigame/images/logo.png" onClick={() => navigate("")} />
             <div className="font-sf text-sm">
               <span
                 className="mr-5 text-white"
@@ -92,7 +92,7 @@ export default function Home() {
 
         {(!listVoucher || listVoucher?.length == 0) && (
           <>
-            <img src="/images/miss.png" className="mx-auto mt-16" />
+            <img src="/minigame/images/miss.png" className="mx-auto mt-16" />
             <div className="mt-5 text-center font-sf">
               Bạn chưa có phần thưởng nào
             </div>
@@ -100,7 +100,7 @@ export default function Home() {
         )}
 
         <img
-          src="/images/back-home.png"
+          src="/minigame/images/back-home.png"
           className="fixed bottom-[25px] right-[18px]"
           onClick={() => navigate("")}
         />
