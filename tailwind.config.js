@@ -10,6 +10,14 @@ module.exports = {
       baloo: ["Baloo", "sans-serif"],
       sf: ["SF Pro Rounded", "sans-serif"],
     },
+
+    colors: {
+      blue: "rgba(0, 92, 183, 1)",
+      pink: "rgba(204, 37, 137, 1)",
+      white: "rgba(255, 255, 255, 1)",
+      black: "#2E2E2E",
+    },
   },
+
   plugins: [],
 };

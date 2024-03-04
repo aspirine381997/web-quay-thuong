@@ -62,3 +62,13 @@
   font-weight: 200;
   src: url("/fonts/SF Rounded/SF-Pro-Rounded-Ultralight.otf");
 }
+
+#wheel {
+  width: 100%;
+}
+
+#canvas {
+  /* width: 100%; */
+  margin: auto;
+  font-family: "SF Pro Rounded" !important;
+}
