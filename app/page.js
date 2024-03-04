@@ -1,11 +1,9 @@
 "use client";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import RewardPopup from "../components/reward-popup";
 import WheelComponent from "../components/wheel";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getTurnsRemain, getTurnsResult } from "./api/api";
-import nextConfig from "@/next.config.mjs";
-import useScreenSize from "@/hooks/useScreenSize";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -126,8 +124,6 @@ export default function Home() {
 
   const [scale, setScale] = useState(0);
 
-  const screen = useScreenSize();
-
   useEffect(() => {
     const handleResize = () => {
       // Kiểm tra kích thước màn hình và quyết định áp dụng scale hay không
@@ -247,7 +243,6 @@ export default function Home() {
                   segColors={segColors}
                   onFinished={(winner) => onFinished(winner)}
                   winningSegment={segments[result?.[0]?.orders]}
-                  isOnlyOnce={false}
                   upDuration={500}
                   downDuration={600}
                   fontFamily="SF Pro Rounded"
@@ -266,7 +261,6 @@ export default function Home() {
                   segColors={segColors}
                   onFinished={(winner) => onFinished(winner)}
                   winningSegment={segments[result?.[0]?.orders]}
-                  isOnlyOnce={false}
                   upDuration={500}
                   downDuration={600}
                   fontFamily="SF Pro Rounded"
@@ -319,7 +313,12 @@ export default function Home() {
                 "mx-auto mt-4 w-full max-w-[279px] rounded-full py-4 font-sf font-medium leading-4 text-white " +
                 (loading ? "bg-[#cdcdcd]" : "bg-pink")
               }
-              onClick={() => window.open("https://medlatec.vn/", "_blank")}
+              onClick={() =>
+                window.open(
+                  "https://medlatec.vn/dich-vu/xet-nghiem-nipt-sang-loc-truoc-sinh-khong-xam-lan",
+                  "_blank",
+                )
+              }
             >
               Đăng ký xét nghiệm NIPT
             </button>

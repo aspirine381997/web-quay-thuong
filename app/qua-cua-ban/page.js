@@ -30,9 +30,47 @@ export default function Home() {
     router.push(`/${page}?phone=${phone}&customerId=${id}`);
   };
 
+  const [scale, setScale] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Kiểm tra kích thước màn hình và quyết định áp dụng scale hay không
+      if (window.innerWidth < 285) setScale(3);
+      else if (window.innerWidth >= 285 && window.innerWidth < 320) setScale(2);
+      else if (window.innerWidth >= 320 && window.innerWidth < 356) setScale(1);
+      else if (window.innerWidth >= 356) setScale(-1);
+      else setScale(0);
+    };
+
+    // Gắn sự kiện resize để kiểm tra kích thước màn hình
+    window.addEventListener("resize", handleResize);
+
+    // Kiểm tra kích thước màn hình khi tải trang
+    handleResize();
+
+    // Loại bỏ sự kiện resize khi unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const checkScale = () => {
+    switch (scale) {
+      case 1:
+        return "zoom-90";
+      case 2:
+        return "zoom-80";
+      case 3:
+        return "zoom-70";
+
+      default:
+        return "";
+    }
+  };
+
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <div className="mb-8 min-h-screen bg-[#F1F3F4]">
+      <div className={"mb-8 min-h-screen bg-[#F1F3F4] " + checkScale()}>
         <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-[21px] pt-10">
           {/* Header---- */}
           <div className="flex place-content-between items-center">
