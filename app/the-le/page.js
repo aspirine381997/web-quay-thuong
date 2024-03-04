@@ -10,7 +10,7 @@ export default function Home() {
   const navigate = (page) => {
     const phone = searchParams.get("phone");
     const id = searchParams.get("customerId");
-    router.push(`/minigame/${page}?phone=${phone}&customerId=${id}`);
+    router.push(`/${page}?phone=${phone}&customerId=${id}`);
   };
 
   return (

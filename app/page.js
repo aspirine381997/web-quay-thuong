@@ -121,7 +121,7 @@ export default function Home() {
   const navigate = (page) => {
     const phone = searchParams.get("phone");
     const id = customer?.customerId;
-    router.push(`/minigame/${page}?phone=${phone}&customerId=${id}`);
+    router.push(`/${page}?phone=${phone}&customerId=${id}`);
   };
 
   const [scale, setScale] = useState(0);
@@ -129,10 +129,25 @@ export default function Home() {
   const screen = useScreenSize();
 
   useEffect(() => {
-    if (screen < 285) setScale(3);
-    else if (screen >= 285 && screen < 320) setScale(2);
-    else if (screen >= 320 && screen < 356) setScale(1);
-    else setScale(0);
+    const handleResize = () => {
+      // Kiểm tra kích thước màn hình và quyết định áp dụng scale hay không
+      if (window.innerWidth < 285) setScale(3);
+      else if (window.innerWidth >= 285 && window.innerWidth < 320) setScale(2);
+      else if (window.innerWidth >= 320 && window.innerWidth < 356) setScale(1);
+      else if (window.innerWidth >= 356) setScale(-1);
+      else setScale(0);
+    };
+
+    // Gắn sự kiện resize để kiểm tra kích thước màn hình
+    window.addEventListener("resize", handleResize);
+
+    // Kiểm tra kích thước màn hình khi tải trang
+    handleResize();
+
+    // Loại bỏ sự kiện resize khi unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const checkScale = () => {
@@ -205,7 +220,26 @@ export default function Home() {
                 src="/minigame/images/outer.png"
                 className="absolute inset-x-0 inset-y-0 mx-auto my-auto w-[274px]"
               />
-              {!allowSpin && (
+              {!allowSpin && scale != 0 && scale != -1 && (
+                <WheelComponent
+                  key={keyForWheelComponent}
+                  primaryColor="#00000000"
+                  segments={segments}
+                  segColors={segColors}
+                  onFinished={(winner) => onFinished(winner)}
+                  winningSegment={segments[result?.[0]?.orders]}
+                  isOnlyOnce={false}
+                  upDuration={500}
+                  downDuration={600}
+                  fontFamily="SF Pro Rounded"
+                  size={130}
+                  spinButtonId={"spinButton"}
+                  onSpin={onSpin}
+                  allowSpin={false}
+                  customer={customer}
+                />
+              )}
+              {!allowSpin && scale == -1 && (
                 <WheelComponent
                   key={keyForWheelComponent}
                   primaryColor="#00000000"
