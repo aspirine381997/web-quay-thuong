@@ -133,7 +133,7 @@ export default function Home() {
     else if (screen >= 285 && screen < 320) setScale(2);
     else if (screen >= 320 && screen < 356) setScale(1);
     else setScale(0);
-  }, [screen]);
+  }, []);
 
   const checkScale = () => {
     switch (scale) {
