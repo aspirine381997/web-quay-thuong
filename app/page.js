@@ -1,9 +1,14 @@
 "use client";
+import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import RewardPopup from "../components/reward-popup";
-import WheelComponent from "../components/wheel";
-import { useRouter, useSearchParams } from "next/navigation";
 import { getTurnsRemain, getTurnsResult } from "./api/api";
+
+const Wheel = dynamic(
+  () => import("react-custom-roulette").then((mod) => mod.Wheel),
+  { ssr: false },
+);
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -14,48 +19,8 @@ export default function Home() {
 
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState(0);
-  const [allowSpin, setAllowSpin] = useState(false);
   const [customer, setCustomer] = useState();
   const [result, setResult] = useState();
-
-  const [keyForWheelComponent, setKeyForWheelComponent] = useState(0);
-
-  const segments = [
-    "Chúc May Mắn Lần Sau",
-    "Giải Nhất",
-    "Giải Nhì",
-    "Giải Ba",
-    "Giải Tư",
-    "Giải Khuyến Khích",
-    "Chúc May Mắn Lần Sau",
-    "Giải Nhất",
-    "Giải Nhì",
-    "Giải Ba",
-    "Giải Tư",
-    "Giải Khuyến Khích",
-  ];
-  const segColors = [
-    "#CC2589",
-    "#00ADDF",
-    "#A3CF00",
-    "#FF9000",
-    "#962189",
-    "#7EB8FF",
-    "#CC2589",
-    "#00ADDF",
-    "#A3CF00",
-    "#FF9000",
-    "#962189",
-    "#7EB8FF",
-  ];
-  const onFinished = (winner) => {
-    setTimeout(() => {
-      console.log(winner);
-      setLoading(false);
-      setAmount((prevAmount) => --prevAmount);
-      setOpenPopup(true);
-    }, 1000);
-  };
 
   const getTurnAmount = () => {
     setLoading(true);
@@ -76,45 +41,6 @@ export default function Home() {
   useEffect(() => {
     setAmount(customer?.amount);
   }, [customer]);
-
-  const onSpin = () => {
-    setLoading(true);
-    getTurnsResult({
-      phone: searchParams?.get("phone"),
-      customerId: customer?.customerId,
-    })
-      .then((data) => {
-        if (data?.code === "SUCCESS" || data?.code === "EXIST_AWARD") {
-          setLoading(true);
-          setResult(data?.data);
-        } else {
-          console.log(data?.message);
-        }
-      })
-      .then(() => {
-        setKeyForWheelComponent((prevKey) => prevKey + 1);
-      })
-      .then(() => setAllowSpin(true));
-  };
-
-  // const handleSpin = useCallback(() => {
-  //   getTurnsResult({
-  //     phone: searchParams?.get("phone"),
-  //     customerId: customer?.customerId,
-  //   })
-  //     .then((data) => {
-  //       if (data?.code === "SUCCESS" || data?.code === "EXIST_AWARD") {
-  //         setLoading(true);
-  //         setResult(data?.data);
-  //       } else {
-  //         console.log(data?.message);
-  //       }
-  //     })
-  //     .then(() => {
-  //       setKeyForWheelComponent((prevKey) => prevKey + 1);
-  //     })
-  //     .then(() => setAllowSpin(true));
-  // }, [customer]);
 
   const navigate = (page) => {
     const phone = searchParams.get("phone");
@@ -160,11 +86,91 @@ export default function Home() {
     }
   };
 
+  const dataWheel = [
+    {
+      image: { uri: "/minigame/images/prize-0.png", offsetX: 0, offsetY: 120 },
+      style: { backgroundColor: "#CC2589", textColor: "white" },
+    },
+    {
+      image: {
+        uri: "/minigame/images/prize-1.png",
+        offsetX: 0,
+        offsetY: 120,
+        sizeMultiplier: 0.6,
+      },
+      style: { backgroundColor: "#00ADDF", textColor: "white" },
+    },
+    {
+      image: {
+        uri: "/minigame/images/prize-2.png",
+        offsetX: 0,
+        offsetY: 120,
+        sizeMultiplier: 0.6,
+      },
+      style: { backgroundColor: "#A3CF00", textColor: "white" },
+    },
+    {
+      image: {
+        uri: "/minigame/images/prize-3.png",
+        offsetX: 0,
+        offsetY: 120,
+        sizeMultiplier: 0.6,
+      },
+      style: { backgroundColor: "#FF9000", textColor: "white" },
+    },
+    {
+      image: {
+        uri: "/minigame/images/prize-4.png",
+        offsetX: 0,
+        offsetY: 120,
+        sizeMultiplier: 0.6,
+      },
+      style: { backgroundColor: "#962189", textColor: "white" },
+    },
+    {
+      image: {
+        uri: "/minigame/images/prize-5.png",
+        offsetX: 0,
+        offsetY: 120,
+        sizeMultiplier: 0.8,
+      },
+      style: { backgroundColor: "#7EB8FF", textColor: "white" },
+    },
+  ];
+
+  const [mustSpin, setMustSpin] = useState(false);
+  const [prizeNumber, setPrizeNumber] = useState(0);
+
+  const handleSpinClick = () => {
+    if (!mustSpin) {
+      setLoading(true);
+      getTurnsResult({
+        phone: searchParams?.get("phone"),
+        customerId: customer?.customerId,
+      }).then((data) => {
+        if (data?.code === "SUCCESS" || data?.code === "EXIST_AWARD") {
+          setMustSpin(true);
+          setResult(data?.data);
+          setPrizeNumber(data?.data?.orders ?? 0);
+        } else {
+          console.log(data?.message);
+        }
+      });
+    }
+  };
+
+  const onFinished = () => {
+    setMustSpin(false);
+    setAmount((prevAmount) => --prevAmount);
+    setOpenPopup(true);
+    setLoading(false);
+  };
+
   return (
     <Suspense fallback={<div>loading...</div>}>
       <div
         className={
-          "flex min-h-screen w-full flex-col place-content-between bg-[url('/minigame/images/bg-app.png')] bg-cover bg-no-repeat px-[27px] pb-[58px] pt-10 " +
+          "flex min-h-screen w-full flex-col place-content-between bg-[url('/minigame/images/bg-app.png')] bg-cover bg-no-repeat px-[27px] pb-[58px] pt-5 " +
           checkScale()
         }
       >
@@ -207,70 +213,29 @@ export default function Home() {
 
           {/* Spin---- */}
           <div className="mt-6">
-            <div className="relative text-[9px] text-xs">
-              <img
-                src="/minigame/images/arrow.png"
-                className="absolute inset-x-0 inset-y-0 mx-auto my-auto"
-              />
-              <img
-                src="/minigame/images/outer.png"
-                className="absolute inset-x-0 inset-y-0 mx-auto my-auto w-[274px]"
-              />
-              {!allowSpin && scale != 0 && scale != -1 && (
-                <WheelComponent
-                  key={keyForWheelComponent}
-                  primaryColor="#00000000"
-                  segments={segments}
-                  segColors={segColors}
-                  onFinished={(winner) => onFinished(winner)}
-                  winningSegment={segments[result?.[0]?.orders]}
-                  isOnlyOnce={false}
-                  upDuration={500}
-                  downDuration={600}
-                  fontFamily="SF Pro Rounded"
-                  size={130}
-                  spinButtonId={"spinButton"}
-                  onSpin={onSpin}
-                  allowSpin={false}
-                  customer={customer}
+            <div className="relative overflow-hidden text-[9px] text-xs">
+              <div className="mx-auto w-fit rotate-[315deg]">
+                <img
+                  src="/minigame/images/arrow.png"
+                  className="absolute inset-x-0 inset-y-0 z-10 mx-auto my-auto rotate-[45deg]"
                 />
-              )}
-              {!allowSpin && scale == -1 && (
-                <WheelComponent
-                  key={keyForWheelComponent}
-                  primaryColor="#00000000"
-                  segments={segments}
-                  segColors={segColors}
-                  onFinished={(winner) => onFinished(winner)}
-                  winningSegment={segments[result?.[0]?.orders]}
-                  upDuration={500}
-                  downDuration={600}
-                  fontFamily="SF Pro Rounded"
-                  size={130}
-                  spinButtonId={"spinButton"}
-                  onSpin={onSpin}
-                  allowSpin={false}
-                  customer={customer}
+                <img
+                  src="/minigame/images/outer.png"
+                  className="absolute inset-x-0 inset-y-0 z-10 mx-auto my-auto w-full max-w-[445px]"
                 />
-              )}
-              {allowSpin && (
-                <WheelComponent
-                  key={keyForWheelComponent}
-                  primaryColor="#00000000"
-                  segments={segments}
-                  segColors={segColors}
-                  onFinished={(winner) => onFinished(winner)}
-                  winningSegment={segments[result?.[0]?.orders]}
-                  upDuration={500}
-                  downDuration={600}
-                  fontFamily="SF Pro Rounded"
-                  size={130}
-                  spinButtonId={"spinButton"}
-                  onSpin={onSpin}
-                  allowSpin={true}
-                  customer={customer}
+                <Wheel
+                  // disableInitialAnimation
+                  pointerProps={{ style: { width: 0 } }}
+                  outerBorderColor="#00000000"
+                  innerBorderColor="#00000000"
+                  radiusLineColor="#00000000"
+                  perpendicularText={true}
+                  mustStartSpinning={mustSpin}
+                  prizeNumber={prizeNumber}
+                  data={dataWheel}
+                  onStopSpinning={() => onFinished()}
                 />
-              )}
+              </div>
             </div>
             <div className="mt-[30px] text-center font-sf text-sm text-white">
               Bạn có {amount} lượt chơi
@@ -278,14 +243,14 @@ export default function Home() {
           </div>
         </div>
 
-        {amount != 0 && (
+        {amount > 0 && (
           <button
             disabled={loading}
-            id="spinButton"
             className={
               "mx-auto mt-4 w-full max-w-[279px] rounded-full py-4 font-sf font-medium leading-4 text-white " +
               (loading ? "bg-[#cdcdcd]" : "bg-pink")
             }
+            onClick={handleSpinClick}
           >
             Quay ngay
           </button>
@@ -308,11 +273,7 @@ export default function Home() {
 
             <button
               type="button"
-              disabled={loading}
-              className={
-                "mx-auto mt-4 w-full max-w-[279px] rounded-full py-4 font-sf font-medium leading-4 text-white " +
-                (loading ? "bg-[#cdcdcd]" : "bg-pink")
-              }
+              className="mx-auto mt-4 w-full max-w-[279px] rounded-full bg-pink py-4 font-sf font-medium leading-4 text-white"
               onClick={() =>
                 window.open(
                   "https://medlatec.vn/dich-vu/xet-nghiem-nipt-sang-loc-truoc-sinh-khong-xam-lan",
