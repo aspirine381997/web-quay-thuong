@@ -73,17 +73,50 @@ export default function Home() {
     };
   }, []);
 
+  // const checkScale = () => {
+  //   switch (scale) {
+  //     case 1:
+  //       return "zoom-90";
+  //     case 2:
+  //       return "zoom-80";
+  //     case 3:
+  //       return "zoom-70";
+
+  //     default:
+  //       return "px-[27px]";
+  //   }
+  // };
   const checkScale = () => {
     switch (scale) {
       case 1:
-        return "zoom-90";
+        return {
+          screenPadding: "px-5",
+          titleFontSize: "text-[64px] leading-[54px]",
+          subTitleFontSize: "text-[30px] leading-[25px]",
+          subPriceFontSize: "text-[14px] leading-[38px]",
+        };
       case 2:
-        return "zoom-80";
+        return {
+          screenPadding: "px-4",
+          titleFontSize: "text-[58px] leading-[49px]",
+          subTitleFontSize: "text-[28px] leading-[24px]",
+          subPriceFontSize: "text-[14px] leading-[38px]",
+        };
       case 3:
-        return "zoom-70";
+        return {
+          screenPadding: "px-3",
+          titleFontSize: "text-[58px] leading-[49px]",
+          subTitleFontSize: "text-[26px] leading-[22px]",
+          subPriceFontSize: "text-[14px] leading-[38px]",
+        };
 
       default:
-        return "";
+        return {
+          screenPadding: "px-[27px]",
+          titleFontSize: "text-[70px] leading-[59px]",
+          subTitleFontSize: "text-[30px] leading-[25px]",
+          subPriceFontSize: "text-[15px] leading-[38px]",
+        };
     }
   };
 
@@ -149,7 +182,7 @@ export default function Home() {
         phone: searchParams?.get("phone"),
         customerId: customer?.customerId,
       }).then((data) => {
-        if (data?.code === "SUCCESS" || data?.code === "EXIST_AWARD") {
+        if (data) {
           setPrizeNumber(data?.data?.[0]?.orders ?? 0);
           setMustSpin(true);
           setResult(data?.data);
@@ -172,8 +205,8 @@ export default function Home() {
     <Suspense fallback={<div>loading...</div>}>
       <div
         className={
-          "flex min-h-screen w-full flex-col place-content-between bg-[url('/minigame/images/bg-app.png')] bg-cover bg-no-repeat px-[27px] pb-[58px] pt-5 " +
-          checkScale()
+          "flex min-h-screen w-full flex-col place-content-between bg-[url('/minigame/images/bg-app.png')] bg-cover bg-no-repeat pb-[58px] pt-5 " +
+          checkScale().screenPadding
         }
       >
         <div>
@@ -194,17 +227,29 @@ export default function Home() {
               <div className="text-[50px] leading-[42px] tracking-tighter">
                 Săn
               </div>
-              <div className="-mt-2.5 text-[70px] leading-[59px] tracking-tighter">
+              <div
+                className={
+                  "-mt-2.5 tracking-tighter " + checkScale().titleFontSize
+                }
+              >
                 Rồng vàng
               </div>
-              <div className="mt-[1px] text-[30px] leading-[25px] tracking-tighter">
+              <div
+                className={
+                  "mt-[1px] tracking-tighter " + checkScale().subTitleFontSize
+                }
+              >
                 Trúng ngàn ưu đãi
               </div>
             </div>
 
             <div className="mt-[14px] font-sf">
               <div className="text-[13px]">01/03/2024 - 01/06/2024</div>
-              <div className="mt-[9px] text-[15px] font-extrabold leading-[38px]">
+              <div
+                className={
+                  "mt-[9px] font-extrabold " + checkScale().subPriceFontSize
+                }
+              >
                 TỔNG GIẢI THƯỞNG TRỊ GIÁ LÊN TỚI
               </div>
               <div className="text-[32px] font-black leading-[17px]">
@@ -227,6 +272,7 @@ export default function Home() {
                 />
                 <Wheel
                   // disableInitialAnimation
+                  startingOptionIndex={0}
                   spinDuration={0.5}
                   pointerProps={{ style: { width: 0 } }}
                   outerBorderColor="#00000000"
