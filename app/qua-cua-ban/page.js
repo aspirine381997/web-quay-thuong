@@ -73,21 +73,26 @@ export default function Home() {
   const checkScale = () => {
     switch (scale) {
       case 1:
-        return "zoom-90";
+        return { zoom: "zoom-90", screenPadding: "px-5" };
       case 2:
-        return "zoom-80";
+        return { zoom: "zoom-80", screenPadding: "px-4" };
       case 3:
-        return "zoom-70";
+        return { zoom: "zoom-70", screenPadding: "px-3" };
 
       default:
-        return "";
+        return { zoom: "", screenPadding: "px-[27px]" };
     }
   };
 
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <div className={"mb-8 min-h-screen bg-[#F1F3F4] " + checkScale()}>
-        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-[21px] pt-5">
+      <div className="mb-8 min-h-screen bg-[#F1F3F4]">
+        <div
+          className={
+            "rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat pb-[21px] pt-5 " +
+            checkScale().screenPadding
+          }
+        >
           {/* Header---- */}
           <div className="flex place-content-between items-center">
             <img src="/minigame/images/logo.png" onClick={() => navigate("")} />
@@ -132,13 +137,15 @@ export default function Home() {
                           : ""}
               </span>
               {listVoucher?.map((voucher) => (
-                <Voucher
-                  code={voucher?.code}
-                  expireDate={voucher?.expireDate}
-                  supplier={voucher?.supplier}
-                  value={voucher?.value}
-                  voucherInfo={voucher?.voucherInfo}
-                />
+                <div className={checkScale().zoom}>
+                  <Voucher
+                    code={voucher?.code}
+                    expireDate={voucher?.expireDate}
+                    supplier={voucher?.supplier}
+                    value={voucher?.value}
+                    voucherInfo={voucher?.voucherInfo}
+                  />
+                </div>
               ))}
             </div>
           </div>

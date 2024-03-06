@@ -57,21 +57,38 @@ export default function Home() {
   const checkScale = () => {
     switch (scale) {
       case 1:
-        return "zoom-90";
+        return {
+          screenPadding: "px-5",
+          subTitleFontSize: "text-[15px] leading-[19px]",
+        };
       case 2:
-        return "zoom-80";
+        return {
+          screenPadding: "px-4",
+          subTitleFontSize: "text-[13px] leading-[19px]",
+        };
       case 3:
-        return "zoom-70";
+        return {
+          screenPadding: "px-3",
+          subTitleFontSize: "text-[13px] leading-[19px]",
+        };
 
       default:
-        return "";
+        return {
+          screenPadding: "px-[27px]",
+          subTitleFontSize: "leading-[19px]",
+        };
     }
   };
 
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <div className={"mb-8 bg-[#F9F9F9] " + checkScale()}>
-        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-3 pt-5">
+      <div className="mb-8 bg-[#F9F9F9]">
+        <div
+          className={
+            "rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat pb-3 pt-5 " +
+            checkScale().screenPadding
+          }
+        >
           {/* Header---- */}
           <div className="flex place-content-between items-center">
             <img src="/minigame/images/logo.png" onClick={() => navigate("")} />
@@ -95,7 +112,12 @@ export default function Home() {
             <div className="text-center font-bold leading-[19px] text-[#FFD600]">
               THỂ LỆ CHƯƠNG TRÌNH
             </div>
-            <div className="mt-2 text-center font-bold leading-[19px] text-white">
+            <div
+              className={
+                "mt-2 text-center font-bold text-white " +
+                checkScale().subTitleFontSize
+              }
+            >
               SĂN RỒNG VÀNG TRÚNG NGÀN ƯU ĐÃI
             </div>
           </div>
