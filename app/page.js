@@ -39,13 +39,14 @@ export default function Home() {
   }, [searchParams]);
 
   useEffect(() => {
-    setAmount(customer?.amount);
+    setAmount(customer?.amount ?? 0);
   }, [customer]);
 
   const navigate = (page) => {
     const phone = searchParams.get("phone");
     const id = customer?.customerId;
-    router.push(`/${page}?phone=${phone}&customerId=${id}`);
+    const type = searchParams.get("type");
+    router.push(`/${page}?phone=${phone}&customerId=${id}&type=${type}`);
   };
 
   const [scale, setScale] = useState(0);
@@ -142,18 +143,19 @@ export default function Home() {
   const [prizeNumber, setPrizeNumber] = useState(0);
 
   const handleSpinClick = () => {
-    if (!mustSpin) {
+    if (!mustSpin && amount > 0) {
       setLoading(true);
       getTurnsResult({
         phone: searchParams?.get("phone"),
         customerId: customer?.customerId,
       }).then((data) => {
         if (data?.code === "SUCCESS" || data?.code === "EXIST_AWARD") {
+          setPrizeNumber(data?.data?.[0]?.orders ?? 0);
           setMustSpin(true);
           setResult(data?.data);
-          setPrizeNumber(data?.data?.orders ?? 0);
         } else {
           console.log(data?.message);
+          setLoading(false);
         }
       });
     }
@@ -161,7 +163,7 @@ export default function Home() {
 
   const onFinished = () => {
     setMustSpin(false);
-    setAmount((prevAmount) => --prevAmount);
+    getTurnAmount();
     setOpenPopup(true);
     setLoading(false);
   };
@@ -225,6 +227,7 @@ export default function Home() {
                 />
                 <Wheel
                   // disableInitialAnimation
+                  spinDuration={0.5}
                   pointerProps={{ style: { width: 0 } }}
                   outerBorderColor="#00000000"
                   innerBorderColor="#00000000"
@@ -243,12 +246,12 @@ export default function Home() {
           </div>
         </div>
 
-        {amount > 0 && (
+        {searchParams.get("type") != "betahcg" && (
           <button
-            disabled={loading}
+            disabled={loading || amount == 0}
             className={
               "mx-auto mt-4 w-full max-w-[279px] rounded-full py-4 font-sf font-medium leading-4 text-white " +
-              (loading ? "bg-[#cdcdcd]" : "bg-pink")
+              (loading || amount == 0 ? "bg-[#cdcdcd]" : "bg-pink")
             }
             onClick={handleSpinClick}
           >
@@ -256,7 +259,7 @@ export default function Home() {
           </button>
         )}
 
-        {amount == 0 && (
+        {searchParams.get("type") == "betahcg" && (
           <>
             <div className="mt-1.5 text-center font-sf text-[13px] text-black">
               Để nhận lượt chơi vui lòng sử dụng dịch vụ NIPT tại MEDLATEC

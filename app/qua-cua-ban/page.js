@@ -2,19 +2,34 @@
 import { Suspense, useEffect, useState } from "react";
 import Voucher from "../../components/voucher";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getListAward } from "../api/api";
+import { getListAward, getTurnsRemain } from "../api/api";
 
 export default function Home() {
   const searchParams = useSearchParams();
 
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+  const [customer, setCustomer] = useState();
   const [listVoucher, setListVoucher] = useState();
 
   useEffect(() => {
+    setLoading(true);
+    getTurnsRemain({ phone: searchParams.get("phone") }).then((data) => {
+      if (data?.code === "SUCCESS") {
+        setCustomer(data?.data);
+        setLoading(false);
+      } else {
+        console.log(data?.message);
+      }
+    });
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!customer) return;
     getListAward({
       phone: searchParams.get("phone"),
-      customerId: searchParams.get("customerId"),
+      customerId: customer?.customerId,
     }).then((data) => {
       if (data?.code === "SUCCESS") {
         setListVoucher(data?.data);
@@ -22,12 +37,13 @@ export default function Home() {
         console.log(data?.message);
       }
     });
-  }, [searchParams]);
+  }, [searchParams, customer]);
 
   const navigate = (page) => {
     const phone = searchParams.get("phone");
-    const id = searchParams.get("customerId");
-    router.push(`/${page}?phone=${phone}&customerId=${id}`);
+    const id = customer?.customerId ?? searchParams.get("customerId");
+    const type = searchParams.get("type");
+    router.push(`/${page}?phone=${phone}&customerId=${id}&type=${type}`);
   };
 
   const [scale, setScale] = useState(0);
@@ -71,7 +87,7 @@ export default function Home() {
   return (
     <Suspense fallback={<div>loading...</div>}>
       <div className={"mb-8 min-h-screen bg-[#F1F3F4] " + checkScale()}>
-        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-[21px] pt-10">
+        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-[21px] pt-5">
           {/* Header---- */}
           <div className="flex place-content-between items-center">
             <img src="/minigame/images/logo.png" onClick={() => navigate("")} />
@@ -128,7 +144,7 @@ export default function Home() {
           </div>
         )}
 
-        {(!listVoucher || listVoucher?.length == 0) && (
+        {listVoucher && listVoucher?.length == 0 && (
           <>
             <img src="/minigame/images/miss.png" className="mx-auto mt-16" />
             <div className="mt-5 text-center font-sf">
@@ -139,7 +155,7 @@ export default function Home() {
 
         <img
           src="/minigame/images/back-home.png"
-          className="fixed bottom-[25px] right-[18px]"
+          className="fixed bottom-[25px] right-[18px] max-w-[85px]"
           onClick={() => navigate("")}
         />
       </div>

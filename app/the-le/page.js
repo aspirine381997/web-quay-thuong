@@ -1,16 +1,33 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { getTurnsRemain } from "../api/api";
 
 export default function Home() {
   const searchParams = useSearchParams();
 
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+  const [customer, setCustomer] = useState();
+
+  useEffect(() => {
+    setLoading(true);
+    getTurnsRemain({ phone: searchParams.get("phone") }).then((data) => {
+      if (data?.code === "SUCCESS") {
+        setCustomer(data?.data);
+        setLoading(false);
+      } else {
+        console.log(data?.message);
+      }
+    });
+  }, [searchParams]);
+
   const navigate = (page) => {
     const phone = searchParams.get("phone");
-    const id = searchParams.get("customerId");
-    router.push(`/${page}?phone=${phone}&customerId=${id}`);
+    const id = customer?.customerId ?? searchParams.get("customerId");
+    const type = searchParams.get("type");
+    router.push(`/${page}?phone=${phone}&customerId=${id}&type=${type}`);
   };
 
   const [scale, setScale] = useState(0);
@@ -54,7 +71,7 @@ export default function Home() {
   return (
     <Suspense fallback={<div>loading...</div>}>
       <div className={"mb-8 bg-[#F9F9F9] " + checkScale()}>
-        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-3 pt-10">
+        <div className="rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat px-[27px] pb-3 pt-5">
           {/* Header---- */}
           <div className="flex place-content-between items-center">
             <img src="/minigame/images/logo.png" onClick={() => navigate("")} />
@@ -202,7 +219,7 @@ export default function Home() {
 
         <img
           src="/minigame/images/back-home.png"
-          className="fixed bottom-[25px] right-[18px]"
+          className="fixed bottom-[25px] right-[18px] max-w-[85px]"
           onClick={() => navigate("")}
         />
       </div>
