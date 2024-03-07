@@ -45,8 +45,7 @@ export default function Home() {
   const navigate = (page) => {
     const phone = searchParams.get("phone");
     const id = customer?.customerId;
-    const type = searchParams.get("type");
-    router.push(`/${page}?phone=${phone}&customerId=${id}&type=${type}`);
+    router.push(`/${page}?phone=${phone}&customerId=${id}`);
   };
 
   const [scale, setScale] = useState(0);
@@ -293,7 +292,7 @@ export default function Home() {
           </div>
         </div>
 
-        {searchParams.get("type") != "betahcg" && (
+        {customer?.code != "KH_BETAHCG" && (
           <button
             disabled={loading || amount == 0}
             className={
@@ -306,7 +305,7 @@ export default function Home() {
           </button>
         )}
 
-        {searchParams.get("type") == "betahcg" && (
+        {customer?.code == "KH_BETAHCG" && (
           <>
             <div className="mt-1.5 text-center font-sf text-[13px] text-black">
               Để nhận lượt chơi vui lòng sử dụng dịch vụ NIPT tại MEDLATEC

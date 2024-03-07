@@ -42,8 +42,7 @@ export default function Home() {
   const navigate = (page) => {
     const phone = searchParams.get("phone");
     const id = customer?.customerId ?? searchParams.get("customerId");
-    const type = searchParams.get("type");
-    router.push(`/${page}?phone=${phone}&customerId=${id}&type=${type}`);
+    router.push(`/${page}?phone=${phone}&customerId=${id}`);
   };
 
   const [scale, setScale] = useState(0);

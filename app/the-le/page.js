@@ -26,8 +26,7 @@ export default function Home() {
   const navigate = (page) => {
     const phone = searchParams.get("phone");
     const id = customer?.customerId ?? searchParams.get("customerId");
-    const type = searchParams.get("type");
-    router.push(`/${page}?phone=${phone}&customerId=${id}&type=${type}`);
+    router.push(`/${page}?phone=${phone}&customerId=${id}`);
   };
 
   const [scale, setScale] = useState(0);
@@ -82,7 +81,7 @@ export default function Home() {
 
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <div className="pb-8 bg-[#F9F9F9]">
+      <div className="bg-[#F9F9F9] pb-8">
         <div
           className={
             "rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat pb-3 pt-5 " +
