@@ -51,10 +51,10 @@ export default function Home() {
   useEffect(() => {
     const handleResize = () => {
       // Kiểm tra kích thước màn hình và quyết định áp dụng scale hay không
-      if (window.innerWidth < 285) setScale(3);
-      else if (window.innerWidth >= 285 && window.innerWidth < 320) setScale(2);
-      else if (window.innerWidth >= 320 && window.innerWidth < 356) setScale(1);
-      else if (window.innerWidth >= 356) setScale(-1);
+      if (screen.width < 285) setScale(3);
+      else if (screen.width >= 285 && screen.width < 320) setScale(2);
+      else if (screen.width >= 320 && screen.width < 356) setScale(1);
+      else if (screen.width >= 356) setScale(-1);
       else setScale(0);
     };
 
