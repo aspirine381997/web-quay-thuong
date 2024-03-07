@@ -37,6 +37,7 @@ export default function RewardPopup(props) {
               </span>
               {listVoucher?.map((voucher) => (
                 <Voucher
+                  key={voucher?.code}
                   code={voucher?.code}
                   expireDate={voucher?.expireDate}
                   supplier={voucher?.supplier}
@@ -50,7 +51,10 @@ export default function RewardPopup(props) {
 
         {listVoucher?.[0]?.orders == 0 && (
           <>
-            <img src="/minigame/images/miss.png" className="mx-auto mt-[30px]" />
+            <img
+              src="/minigame/images/miss.png"
+              className="mx-auto mt-[30px]"
+            />
             <div className="mb-[36px] mt-[18px] text-center font-sf text-xl font-semibold text-pink">
               Chúc bạn may mắn lần sau
             </div>

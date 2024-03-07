@@ -11,7 +11,7 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState();
-  const [listVoucher, setListVoucher] = useState();
+  const [listAward, setListAward] = useState();
 
   useEffect(() => {
     setLoading(true);
@@ -32,7 +32,7 @@ export default function Home() {
       customerId: customer?.customerId,
     }).then((data) => {
       if (data?.code === "SUCCESS") {
-        setListVoucher(data?.data);
+        setListAward(data?.data);
       } else {
         console.log(data?.message);
       }
@@ -84,9 +84,26 @@ export default function Home() {
     }
   };
 
+  const checkAward = (award) => {
+    switch (award) {
+      case 1:
+        return "Giải nhất";
+      case 2:
+        return "Giải nhì";
+      case 3:
+        return "Giải ba";
+      case 4:
+        return "Giải tư";
+      case 5:
+        return "Giải khuyến khích";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <div className="mb-8 min-h-screen bg-[#F1F3F4]">
+      <div className="min-h-screen bg-[#F1F3F4] pb-8">
         <div
           className={
             "rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat pb-[21px] pt-5 " +
@@ -120,9 +137,9 @@ export default function Home() {
         </div>
 
         {/* Vouchers---- */}
-        {listVoucher && listVoucher?.length != 0 && (
+        {listAward && listAward?.length != 0 && (
           <div className="mt-[22px] px-[22px] font-sf">
-            <div className="mb-5 rounded-[20px] bg-white px-4 py-5">
+            {/* <div className="mb-5 rounded-[20px] bg-white px-4 py-5">
               <span className="text-[13px] text-black">
                 {listVoucher?.[0]?.orders == 1
                   ? "Giải Nhất"
@@ -147,11 +164,33 @@ export default function Home() {
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
+
+            {listAward?.map((item) => (
+              <div
+                key={item?.programId}
+                className="mb-5 rounded-[20px] bg-white px-4 py-5"
+              >
+                <span className="text-[13px] text-black">
+                  {checkAward(item?.list?.[0]?.orders)}
+                </span>
+                {item?.list?.map((voucher) => (
+                  <div key={voucher?.code} className={checkScale().zoom}>
+                    <Voucher
+                      code={voucher?.code}
+                      expireDate={voucher?.expireDate}
+                      supplier={voucher?.supplier}
+                      value={voucher?.value}
+                      voucherInfo={voucher?.voucherInfo}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         )}
 
-        {listVoucher && listVoucher?.length == 0 && (
+        {listAward && listAward?.length == 0 && (
           <>
             <img src="/minigame/images/miss.png" className="mx-auto mt-16" />
             <div className="mt-5 text-center font-sf">

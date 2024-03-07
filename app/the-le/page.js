@@ -82,7 +82,7 @@ export default function Home() {
 
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <div className="mb-8 bg-[#F9F9F9]">
+      <div className="pb-8 bg-[#F9F9F9]">
         <div
           className={
             "rounded-b-[30px] bg-[url('/minigame/images/bg-thele.png')] bg-cover bg-no-repeat pb-3 pt-5 " +
