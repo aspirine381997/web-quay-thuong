@@ -205,7 +205,7 @@ export default function Home() {
     <Suspense fallback={<div>loading...</div>}>
       <div
         className={
-          "flex min-h-screen w-full flex-col place-content-between bg-[url('/minigame/images/bg-app.png')] bg-cover bg-no-repeat pb-[58px] pt-5 " +
+          "flex min-h-screen w-full flex-col place-content-between overflow-hidden bg-[url('/minigame/images/bg-app.png')] bg-cover bg-no-repeat pb-[58px] pt-5 " +
           checkScale().screenPadding
         }
       >
@@ -229,7 +229,8 @@ export default function Home() {
               </div>
               <div
                 className={
-                  "-mt-2.5 tracking-tighter " + checkScale().titleFontSize
+                  "-mx-10 -mt-2.5 tracking-tighter " +
+                  checkScale().titleFontSize
                 }
               >
                 Rồng vàng
